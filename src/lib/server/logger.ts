@@ -1,5 +1,6 @@
 import winston from "winston";
 import { dev } from "$app/environment";
+import { env } from "$env/dynamic/private";
 
 const logger = winston.createLogger({
   transports: [],
@@ -22,6 +23,7 @@ async function addMongoLogger(uri: string) {
   logger.add(
     new instance.MongoDB({
       db: uri,
+      dbName: env.MONGO_INITDB_DATABASE,
       collection: "logs",
       level: "info",
     })
