@@ -14,4 +14,4 @@ async function connectMongo() {
   return db;
 }
 
-export { connectMongo };
+export { connectMongo, client, uri };
