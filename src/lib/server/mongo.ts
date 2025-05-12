@@ -11,11 +11,23 @@ const client = new MongoClient(uri, {
 let db: ReturnType<typeof client.db>;
 
 client.on("commandStarted", (event) => {
-  logger.info("MongoDB Command Started", {
-    commandName: event.commandName,
-    databaseName: event.databaseName,
-    command: event.command,
-  });
+  logger.info("MongoDB Command Started", event);
+});
+
+client.on("commandFailed", (event) => {
+  logger.error("MongoDB Command Failed", event);
+});
+
+client.on("commandSucceeded", (event) => {
+  logger.info("MongoDB Command Succeeded", event);
+});
+
+client.on("error", (error) => {
+  logger.error("MongoDB connection error", error);
+});
+
+client.on("close", () => {
+  logger.info("MongoDB connection closed");
 });
 
 async function connectMongo() {
