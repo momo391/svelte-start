@@ -1,18 +1,4 @@
 services:
-  svelte:
-    build:
-      context: .
-      dockerfile: dockerfile
-    container_name: svelte
-    ports:
-      - "5173:5173"
-    depends_on:
-      - mongodb
-    volumes:
-      - .:/app
-      - /app/node_modules
-    networks:
-      - app-network
   mongodb:
     image: mongo
     container_name: mongodb
@@ -23,13 +9,13 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD:-example}
       MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE:-mydb}
     volumes:
-      - mongo-data:/data/db
+      - mongodb-data:/data/db
     networks:
-      - app-network
+      - database
     restart: always
 
 networks:
-  app-network:
+  database:
 
 volumes:
-  mongo-data:
+  mongodb-data:
