@@ -1,24 +1,31 @@
 import winston from "winston";
-import "winston-mongodb";
 import { dev } from "$app/environment";
-import { uri } from "$lib/server/mongo";
-import { env } from "$env/dynamic/private";
 
 const logger = winston.createLogger({
-  transports: [
-    new winston.transports.MongoDB({
-      db: uri,
-      dbName: env.MONGO_INITDB_DATABASE,
-      collection: "logs",
-      level: "info",
-    }),
-  ],
+  transports: [],
 });
 
 if (dev) {
   logger.add(
-    new winston.transports.Console({ format: winston.format.simple() })
+    new winston.transports.Console({
+      format: winston.format.combine(
+        winston.format.timestamp(),
+        winston.format.colorize(),
+        winston.format.simple()
+      ),
+    })
   );
 }
 
-export { logger };
+async function addMongoLogger(uri: string) {
+  const instance = await import("winston-mongodb");
+  logger.add(
+    new instance.MongoDB({
+      db: uri,
+      collection: "logs",
+      level: "info",
+    })
+  );
+}
+
+export { logger, addMongoLogger };
