@@ -17,10 +17,11 @@ services:
     image: mongo
     container_name: mongodb
     ports:
-      - "${MONGO_PORT:-27017}:27017"
+      - "${MONGO_INITDB_PORT:-27017}:27017"
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME:-root}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD:-example}
+      MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE:-mydb}
     volumes:
       - mongo-data:/data/db
     networks:
