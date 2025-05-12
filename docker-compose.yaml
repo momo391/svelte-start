@@ -14,8 +14,26 @@ services:
       - database
     restart: always
 
+  minio:
+    image: minio/minio
+    container_name: minio
+    ports:
+      - "${MINIO_PORT:-9000}:9000"
+      - "${MINIO_CONSOLE_PORT:-9001}:9001"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-admin}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-secret}
+    volumes:
+      - storage:/data
+    networks:
+      - storage
+    restart: unless-stopped
+    command: server /data --console-address ":9001"
+
 networks:
   database:
+  storage:
 
 volumes:
   mongodb-data:
+  storage:
